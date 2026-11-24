@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="login-form">
+    <p>
+      <label>
+        Username
+        <input id="username" name="username" autocomplete="username" required>
+      </label>
+    </p>
+    <p>
+      <label>
+        Password
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+      </label>
+    </p>
+    <button type="submit">Login</button>
+  </form>
+  <p id="message" role="status"></p>
+  <script src="js/auth.js"></script>
+  <script>
+    const savedSession = getSession();
+    if (savedSession) {
+      openDashboard(savedSession.role);
+    }
+
+    function openDashboard(role) {
+      if (role === "admin") {
+        window.location.href = "dashboard/admin-dashboard.html";
+      } else {
+        window.location.href = "dashboard/staff-dashboard.html";
+      }
+    }
+
+    document.getElementById("login-form").addEventListener("submit", function (event) {
+      // Keep the form from reloading the page.
+      event.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const session = login(username, password);
+      const message = document.getElementById("message");
+
+      if (session) {
+        openDashboard(session.role);
+      } else {
+        message.textContent = "Invalid username or password.";
+      }
+    });
+  </script>
+</body>
+</html>
